@@ -12,7 +12,7 @@ export const editInvoice = (invoice) => {
     }
 }
 
-export const deleteInvoive = (invoice) => {
+export const deleteInvoice = (invoice) => {
     return {
         type: "DELETE_INVOICE",
         payload: invoice,

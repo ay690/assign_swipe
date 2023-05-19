@@ -6,6 +6,7 @@ import InvoiceForm from "./components/InvoiceForm";
 import store from "./redux/store";
 import { Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
+import All_Invoices from "./components/All_Invoices";
 
 class App extends Component {
   render() {
@@ -14,7 +15,9 @@ class App extends Component {
         <Provider store={store}>
           <Container>
             <Routes>
-              <Route path="/" element={<InvoiceForm />} /> 
+              <Route path="/" element={<All_Invoices />} />
+              <Route path="/create-invoice" element={<InvoiceForm />} />
+              <Route path="/edit-invoice/:id" element={<InvoiceForm />} />
             </Routes>
           </Container>
         </Provider>

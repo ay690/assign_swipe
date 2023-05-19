@@ -1,49 +1,31 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { connect } from 'react-redux';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import InvoiceItem from './InvoiceItem';
+import{ addInvoice, editInvoice } from "../redux/invoceSlice/action";
 import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { Link } from 'react-router-dom';
+
 
 class InvoiceForm extends React.Component {
+  
   constructor(props) {
-    super(props);
-    this.state = {
-      isOpen: false,
-      currency: '$',
-      currentDate: '',
-      invoiceNumber: 1,
-      dateOfIssue: '',
-      billTo: '',
-      billToEmail: '',
-      billToAddress: '',
-      billFrom: '',
-      billFromEmail: '',
-      billFromAddress: '',
-      notes: '',
-      total: '0.00',
-      subTotal: '0.00',
-      taxRate: '',
-      taxAmmount: '0.00',
-      discountRate: '',
-      discountAmmount: '0.00'
-    };
-    this.state.items = [
-      {
-        id: 0,
-        name: '',
-        description: '',
-        price: '1.00',
-        quantity: 1
-      }
-    ];
+    super(props); 
+    this.addTo= window.location.pathname==='/create-invoice'
+    let invoice= this.addTo ? 0 : Number(window.location.pathname.slice(14));
+    const edit = props.invoiceState.invoices.filter(inv=> inv.invoiceNumber===invoice);
+    this.state= edit[0] ? edit[0] : this.props.invoiceState.invoices[0];
+    if(this.addTo)this.state.invoiceNumber= props.invoiceState.invoices[Number(props.invoiceState.invoices.length)-1].invoiceNumber
     this.editField = this.editField.bind(this);
   }
   componentDidMount(prevProps) {
+    
     this.handleCalculateTotal()
   }
   handleRowDel(items) {
@@ -115,11 +97,15 @@ class InvoiceForm extends React.Component {
   onCurrencyChange = (selectedOption) => {
     this.setState(selectedOption);
   };
+  
   openModal = (event) => {
     event.preventDefault()
     this.handleCalculateTotal()
+    this.addTo ? this.props.addInvoice(this.state) : this.props.editInvoice(this.state)
     this.setState({isOpen: true})
+    if( this.addTo ) this.state.invoiceNumber = this.state.invoiceNumber + 1
   };
+
   closeModal = (event) => this.setState({isOpen: false});
   render() {
     return (<Form onSubmit={this.openModal}>
@@ -143,7 +129,7 @@ class InvoiceForm extends React.Component {
               </div>
               <div className="d-flex flex-row align-items-center">
                 <span className="fw-bold me-2">Invoice&nbsp;Number:&nbsp;</span>
-                <Form.Control type="number" value={this.state.invoiceNumber} name={"invoiceNumber"} onChange={(event) => this.editField(event)} min="1" style={{
+                <Form.Control type="number" value={this.state.invoiceNumber} name={"invoiceNumber"} onChange={(event) => this.editField(event)} min="0" style={{
                     maxWidth: '70px'
                   }} required="required"/>
               </div>
@@ -205,7 +191,7 @@ class InvoiceForm extends React.Component {
         </Col>
         <Col md={4} lg={3}>
           <div className="sticky-top pt-md-3 pt-xl-4">
-            <Button variant="primary" type="submit" className="d-block w-100">Review Invoice</Button>
+          <Link to='/'><Button variant="primary" type="submit" className="d-block w-100">All Invoices</Button></Link>
             <InvoiceModal showModal={this.state.isOpen} closeModal={this.closeModal} info={this.state} items={this.state.items} currency={this.state.currency} subTotal={this.state.subTotal} taxAmmount={this.state.taxAmmount} discountAmmount={this.state.discountAmmount} total={this.state.total}/>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Currency:</Form.Label>
@@ -238,6 +224,7 @@ class InvoiceForm extends React.Component {
                 </InputGroup.Text>
               </InputGroup>
             </Form.Group>
+          <Button variant="primary" type="submit" className="d-block w-100">Save Invoice</Button>
           </div>
         </Col>
       </Row>
@@ -245,4 +232,10 @@ class InvoiceForm extends React.Component {
   }
 }
 
-export default InvoiceForm;
+function mapStateToProps (state){
+  return{
+    invoiceState: state
+  }
+}
+
+export default connect(mapStateToProps, {addInvoice, editInvoice})(InvoiceForm);

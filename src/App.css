@@ -22,8 +22,48 @@ html,
   color: #61dafb;
 }
 
+.invoiceGenerator{
+  text-align: right;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: #394a57;
+}
+
 .btn-light {
   border-color: #dedede
+}
+.right{
+  position: absolute;
+  right: 0px;
+}
+
+.invoice{ 
+  background-color: #e3e6e9;
+  padding: 8px;
+  margin-top: 14px;
+  border-radius: 10px;
+}
+
+.image{
+  height: 15px;
+  margin-left: 10px;
+}
+
+.image:hover{
+  cursor: pointer;
+}
+
+
+.invoice div{
+  width: 90%;
+  margin: auto auto;
+  margin-top: 4px;
+  position: relative;
+  font-family: sans-serif;
+}
+
+.icons{
+  margin: auto auto;
+  text-align: center;
 }
 
 .btn-light:hover {

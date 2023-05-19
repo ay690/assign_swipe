@@ -33,11 +33,28 @@ const initialState = {
 }
 
 
-export const invoiceReducer = (state=initialState, action) => {
- switch(action.type){
-    case 'ADD_INVOICE' : state.invoices.push(action.payload);return state;
-    case 'EDIT_INVOICE' : state.invoices.map(ivc => ivc.invoiceNumber===action.payload.invoiceNumber ? action.payload : ivc); return state;
-    case 'DELETE_INVOICE' : state.invoices.filter(ivc => ivc !== action.payload); return state;
-    default: return state;
- }
-}
+export const invoiceReducer = (state = initialState, action) => {
+    switch (action.type) {
+      case 'ADD_INVOICE':
+        return {
+          ...state,
+          invoices: [...state.invoices, action.payload]
+        };
+      case 'EDIT_INVOICE':
+        return {
+          ...state,
+          invoices: state.invoices.map(ivc =>
+            ivc.invoiceNumber === action.payload.invoiceNumber ? action.payload : ivc
+          )
+        };
+        case 'DELETE_INVOICE':
+            return {
+              ...state,
+              invoices: state.invoices.filter(ivc => ivc.invoiceNumber !== action.payload.invoiceNumber)
+            };
+          
+      default:
+        return state;
+    }
+  };
+  
