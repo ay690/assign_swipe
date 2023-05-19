@@ -1,5 +1,7 @@
 ### My site
-https://swipe-invoice-generator-assignment.netlify.app/
+https://swipe-invoice-generator-assignment.netlify.app/  
+
+This is an invoice generator developed using React and Redux applications, encompassing a wide range of features such as effortless invoice creation, seamless editing capabilities, convenient deletion options, and efficient saving functionality. Additionally, it empowers users with the ability to effortlessly generate new invoices whenever needed, enhancing their overall experience and streamlining their invoicing processes.
 
 
 
