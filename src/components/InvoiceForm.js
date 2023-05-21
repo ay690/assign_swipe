@@ -34,42 +34,44 @@ class InvoiceForm extends React.Component {
     this.setState(this.state.items);
   };
   handleAddEvent(evt) {
-    var id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
+    evt.preventDefault(); // Prevent the default form submission behavior
+  
+    var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
     var items = {
       id: id,
       name: '',
       price: '1.00',
       description: '',
       quantity: 1
-    }
-    this.state.items.push(items);
-    this.setState(this.state.items);
+    };
+  
+    this.setState((prevState) => ({
+      items: [...prevState.items, items] // Create a new array with the existing items and the new item
+    }), () => {
+      this.handleCalculateTotal(); // Recalculate the total after adding the item
+    });
   }
+  
   handleCalculateTotal() {
     var items = this.state.items;
     var subTotal = 0;
-
-    items.map(function(items) {
-      subTotal = parseFloat(subTotal + (parseFloat(items.price).toFixed(2) * parseInt(items.quantity))).toFixed(2)
+  
+    items.forEach((item) => {
+      subTotal += parseFloat(item.price) * parseInt(item.quantity);
     });
-
+  
+    var taxAmount = subTotal * (this.state.taxRate / 100);
+    var discountAmount = subTotal * (this.state.discountRate / 100);
+    var total = subTotal - discountAmount + taxAmount;
+  
     this.setState({
-      subTotal: parseFloat(subTotal).toFixed(2)
-    }, () => {
-      this.setState({
-        taxAmmount: parseFloat(parseFloat(subTotal) * (this.state.taxRate / 100)).toFixed(2)
-      }, () => {
-        this.setState({
-          discountAmmount: parseFloat(parseFloat(subTotal) * (this.state.discountRate / 100)).toFixed(2)
-        }, () => {
-          this.setState({
-            total: ((subTotal - this.state.discountAmmount) + parseFloat(this.state.taxAmmount))
-          });
-        });
-      });
+      subTotal: subTotal.toFixed(2),
+      taxAmount: taxAmount.toFixed(2),
+      discountAmount: discountAmount.toFixed(2),
+      total: total.toFixed(2)
     });
-
-  };
+  }
+  
   onItemizedItemEdit(evt) {
     var item = {
       id: evt.target.id,
